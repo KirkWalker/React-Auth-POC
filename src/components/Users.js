@@ -1,60 +1,63 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import { useNavigate, useLocation } from "react-router-dom";
-import useRefreshToken from "../hooks/useRefreshToken";
+import { useNavigate, useLocation } from 'react-router-dom';
+import useRefreshToken from '../hooks/useRefreshToken';
 
 const Users = () => {
-    const [users, setUsers] = useState();
-    const refresh = useRefreshToken();
-    const axiosPrivate = useAxiosPrivate();
-    const navigate = useNavigate();
-    const location = useLocation();
+  const [users, setUsers] = useState();
+  const refresh = useRefreshToken();
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    useEffect(() => {
-      let isMounted = true;
-      const controller = new AbortController();
-      
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
 
-      const getUsers = async () => {
-        try {
-            const response = await axiosPrivate.get('/users', {
-                signal: controller.signal
-            });
-            //console.log(response.data);
-            isMounted && setUsers(response.data);
-        } catch (err) {
-            console.error(err);
-            navigate('/login', { state: { from: location }, replace: true });
-        }
+    const getUsers = async () => {
+      try {
+        const response = await axiosPrivate.get('/users', {
+          signal: controller.signal,
+        });
+        //console.log(response.data);
+        isMounted && setUsers(response.data);
+      } catch (err) {
+        console.error(err);
+        navigate('/login', { state: { from: location }, replace: true });
       }
+    };
 
-      getUsers();
+    getUsers();
 
-      return () => {
-          isMounted = false;
-          //controller.abort();
-      }
+    return () => {
+      isMounted = false;
+      //controller.abort();
+    };
+  }, [axiosPrivate, navigate, location]);
 
-    }, [axiosPrivate,navigate,location]);
+  return (
+    <div>
+      <article>
+        <h2>Users List</h2>
+        {users?.length ? (
+          <ul>
+            {users.map((user, i) => (
+              <li key={i}>{user?.username}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No users to display</p>
+        )}
+        <button
+          onClick={() => {
+            refresh();
+          }}
+        >
+          Refresh
+        </button>
+      </article>
+    </div>
+  );
+};
 
-
-    return (
-      <div>
-        <article>
-            <h2>Users List</h2>
-            {users?.length
-                ? (
-                    <ul>
-                        {users.map((user, i) => <li key={i}>{user?.username}</li>)}
-                    </ul>
-                ) : <p>No users to display</p>
-            }
-            <button onClick={(() => {refresh()})}>Refresh</button>
-        </article>
-        
-      </div>
-    );
-  };
-  
-  export default Users;
-  
+export default Users;

@@ -1,29 +1,29 @@
-import { useRef, useState, useEffect } from "react";
-import useAuth from "../hooks/useAuth";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "../api/axios";
-const LOGIN_URL = "/auth";
+import { useRef, useState, useEffect } from 'react';
+import useAuth from '../hooks/useAuth';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import axios from '../api/axios';
+const LOGIN_URL = '/auth';
 
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth(); //custom hook make this easier
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || '/';
 
   const userRef = useRef();
   const errRef = useRef();
 
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+  const [user, setUser] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
     userRef.current.focus();
   }, []);
 
   useEffect(() => {
-    setErrMsg("");
+    setErrMsg('');
   }, [user, pwd]);
 
   const handleSubmit = async (e) => {
@@ -34,47 +34,47 @@ const Login = () => {
         LOGIN_URL,
         JSON.stringify({ user, pwd }),
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
-        }
+        },
       );
       //console.log(JSON.stringify(response?.data));
       //console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
       const roles = response?.data?.roles;
       setAuth({ user, pwd, roles, accessToken });
-      setUser("");
-      setPwd("");
+      setUser('');
+      setPwd('');
       navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
       if (!err?.response) {
-        setErrMsg("No Server Response");
+        setErrMsg('No Server Response');
       } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
+        setErrMsg('Missing Username or Password');
       } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
+        setErrMsg('Unauthorized');
       } else {
-        setErrMsg("Login Failed");
+        setErrMsg('Login Failed');
       }
       errRef.current.focus();
     }
   };
 
   const togglePersist = () => {
-    setPersist(prev => !prev);
-  }
+    setPersist((prev) => !prev);
+  };
 
   useEffect(() => {
-      localStorage.setItem("persist", persist);
-  }, [persist])
+    localStorage.setItem('persist', persist);
+  }, [persist]);
 
   return (
     <div className="App">
       <section>
         <p
           ref={errRef}
-          className={errMsg ? "errmsg" : "offscreen"}
+          className={errMsg ? 'errmsg' : 'offscreen'}
           aria-live="assertive"
         >
           {errMsg}
@@ -102,14 +102,14 @@ const Login = () => {
           />
           <button>Sign In</button>
           <div className="persistCheck">
-                <input
-                    type="checkbox"
-                    id="persist"
-                    onChange={togglePersist}
-                    checked={persist}
-                />
-                <label htmlFor="persist">Trust This Device</label>
-            </div>
+            <input
+              type="checkbox"
+              id="persist"
+              onChange={togglePersist}
+              checked={persist}
+            />
+            <label htmlFor="persist">Trust This Device</label>
+          </div>
         </form>
         <p>
           Need an Account?
