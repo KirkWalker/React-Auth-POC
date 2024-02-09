@@ -38,7 +38,7 @@ const Login = () => {
           withCredentials: true,
         },
       );
-      //console.log(JSON.stringify(response?.data));
+      console.log(JSON.stringify(response?.data));
       //console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
       const roles = response?.data?.roles;
@@ -71,7 +71,7 @@ const Login = () => {
 
   return (
     <div className="App">
-      <section>
+      <section className="login-section">
         <p
           ref={errRef}
           className={errMsg ? 'errmsg' : 'offscreen'}

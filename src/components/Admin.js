@@ -4,14 +4,14 @@ import Users from './Users';
 const Admin = () => {
   return (
     <div className="App">
-      <section>
+      <section className="login-section">
         <h1>Admins Page</h1>
         <br />
         <Users />
         <br />
         <p>You must have been assigned an Admin role.</p>
         <div className="flexGrow">
-          <Link to="/">Home</Link>
+          <Link to="/links">Links</Link>
         </div>
       </section>
     </div>

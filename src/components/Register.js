@@ -96,7 +96,7 @@ const Register = () => {
           </p>
         </section>
       ) : (
-        <section>
+        <section className="login-section">
           <p
             ref={errRef}
             className={errMsg ? 'errmsg' : 'offscreen'}
